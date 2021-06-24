@@ -1,0 +1,25 @@
+import discord
+import os
+
+client = discord.Client()
+
+squish_words = ["squish", "squash"]
+
+@client.event
+async def on_ready():
+    print('We have logged in as {0.user}'.format(client))
+
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+        return
+
+    if message.author.bot: return
+    
+    msg = message.content
+    msg = msg.lower()
+
+    if any(word in msg for word in squish_words):
+        await message.channel.send('Gotta squish that cat!')
+    
+client.run(os.getenv('TOKEN'))
