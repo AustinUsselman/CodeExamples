@@ -1,0 +1,32 @@
+import discord
+import os
+import time
+from discord.utils import get
+
+client = discord.Client()
+jail_words = ["!takemetojail"]
+
+@client.event
+async def on_ready():
+    print('We have logged in as {0.user}'.format(client))
+
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+        return
+
+    if message.author.bot: return
+    
+    msg = message.content
+    msg = msg.lower()
+
+    if any(word in msg for word in jail_words):
+        JAIL = get(message.guild.roles, name="Jail")
+        member = message.author
+        await message.channel.send('Go to jail')
+        await message.channel.send('*BONK*')
+        await member.add_roles(JAIL)
+        time.sleep(120)
+        await member.remove_roles(JAIL)
+
+client.run(os.getenv('TOKEN'))
